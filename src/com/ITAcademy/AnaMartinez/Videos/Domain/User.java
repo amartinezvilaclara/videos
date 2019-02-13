@@ -1,20 +1,20 @@
 package com.ITAcademy.AnaMartinez.Videos.Domain;
 
-import java.time.LocalDate;
+import java.security.InvalidParameterException;
+import java.util.Date;
 
 public class User {
+
     private String name;
     private String surname;
     private String password;
-    private LocalDate registerDate;
+    private Date registrationDate;
 
-    public User(){}
-
-    public User(String name, String surname, String password){
-        this.name = name;
-        this.surname = surname;
-        this.password = password;
-        registerDate = LocalDate.now();
+    public User(String userName, String userSurname, String userPassword) {
+        setName(userName);
+        setSurname(userSurname);
+        setPassword(userPassword);
+        this.registrationDate = new Date();
     }
 
     public String getName() {
@@ -22,7 +22,12 @@ public class User {
     }
 
     public void setName(String name) {
+        if(isANullOrEmptyString(name)) throw new InvalidParameterException();
         this.name = name;
+    }
+
+    private boolean isANullOrEmptyString(String string) {
+        return (string == null)||(string.equals(""));
     }
 
     public String getSurname() {
@@ -30,6 +35,7 @@ public class User {
     }
 
     public void setSurname(String surname) {
+        if(isANullOrEmptyString(surname)) throw new InvalidParameterException();
         this.surname = surname;
     }
 
@@ -38,10 +44,12 @@ public class User {
     }
 
     public void setPassword(String password) {
+        if(isANullOrEmptyString(password)) throw new InvalidParameterException();
         this.password = password;
     }
 
-    public LocalDate getRegisterDate(){
-        return registerDate;
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
+
 }
