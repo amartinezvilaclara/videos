@@ -5,16 +5,35 @@ import java.util.Date;
 
 public class User {
 
+    private String uniqueUserId;
     private String name;
     private String surname;
     private String password;
     private Date registrationDate;
 
-    public User(String userName, String userSurname, String userPassword) {
-        setName(userName);
-        setSurname(userSurname);
-        setPassword(userPassword);
+    private User(String userId){
+        setUniqueUserId(userId);
+        this.name = null;
+        this.surname = null;
+        this.password = null;
+        this.registrationDate = null;
+    }
+
+    public User(String uniqueUserId, String name, String surname, String password) {
+        setUniqueUserId(uniqueUserId);
+        setName(name);
+        setSurname(surname);
+        setPassword(password);
         this.registrationDate = new Date();
+    }
+
+    private void setUniqueUserId(String uniqueUserId) {
+        if(isANullOrEmptyString(uniqueUserId)) throw new InvalidParameterException();
+        this.uniqueUserId = uniqueUserId;
+    }
+
+    public String getUniqueUserId() {
+        return uniqueUserId;
     }
 
     public String getName() {
@@ -52,4 +71,22 @@ public class User {
         return registrationDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof User)) return false;
+        else {
+            User user = (User) o;
+            return this.uniqueUserId.equals(user.getUniqueUserId());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return this.uniqueUserId.hashCode();
+    }
+
+    public static User createDummy(String userId) {
+        return new User(userId);
+    }
 }

@@ -3,23 +3,21 @@ package com.ITAcademy.AnaMartinez.Videos.Domain;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Video {
 
-    private UUID uuid;
     private String URL;
     private String title;
     private List<String> tags;
+    private String owner;
 
-    public Video(String URL, String title) {
-        uuid = UUID.randomUUID();
+    public Video(String URL, String title, String owner) {
         setURL(URL);
         setTitle(title);
+        setOwner(owner);
         this.tags = new ArrayList<>();
     }
 
-    public UUID getUuid() { return uuid; }
     public String getURL() {
         return URL;
     }
@@ -62,6 +60,25 @@ public class Video {
 
     public void removeAllTags() {
         this.tags = new ArrayList<>();
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    private void setOwner( String owner) {
+        if(isANullOrEmptyString(owner)) throw new InvalidParameterException();
+        this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "URL='" + URL + '\'' +
+                ", title='" + title + '\'' +
+                ", tags=" + tags +
+                ", owner='" + owner + '\'' +
+                '}';
     }
 }
 

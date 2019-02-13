@@ -14,14 +14,13 @@ public class VideoTest {
 
     @Before
     public void setUp() {
-        this.video = new Video("myURL.com","my Video");
+        this.video = new Video("myURL.com","my Video", "userId");
     }
 
     @Test
-    public void theVideoHasUrlAndTitleAndAnUUID(){
+    public void theVideoHasUrlAndTitle(){
         assertEquals("myURL.com", video.getURL());
         assertEquals("my Video", video.getTitle());
-        assertNotNull(video.getUuid());
     }
 
     @Test
@@ -112,5 +111,20 @@ public class VideoTest {
     @Test (expected = InvalidParameterException.class)
     public void PassingANullStringAsTagToRemoveProvokesAnException() {
         video.addTag(null);
+    }
+
+    @Test
+    public void theVideoBelongsToAnOwner(){
+        assertEquals("userId", video.getOwner());
+    }
+
+    @Test (expected = InvalidParameterException.class)
+    public void PassingAnEmptyStringAsOwnerProvokesAnException(){
+       this.video = new Video("whatever","my Video", "");
+    }
+
+    @Test (expected = InvalidParameterException.class)
+    public void PassingANullStringAsOwnerProvokesAnException(){
+        this.video = new Video("whatever","my Video", null);
     }
 }

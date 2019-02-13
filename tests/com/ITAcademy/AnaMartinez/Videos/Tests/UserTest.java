@@ -15,11 +15,13 @@ public class UserTest {
 
     @Before
     public void setUp(){
-        this.user = new User("UserName","UserSurname","UserPassword");
+        this.user = new User("UserID","UserName","UserSurname","UserPassword");
     }
 
     @Test
-    public void theUserHasNameSurnamePasswordAndRegisterDate(){
+    public void theUserHasUsernameNameSurnamePasswordAndRegisterDate(){
+        String userId = user.getUniqueUserId();
+        assertEquals("UserID",userId);
         String name = user.getName();
         assertEquals("UserName", name);
         String surname = user.getSurname();
@@ -58,5 +60,49 @@ public class UserTest {
     @Test (expected = InvalidParameterException.class)
     public void anEmptyStringAsPasswordProvokesAnException(){
         user.setPassword("");
+    }
+
+    @Test (expected = InvalidParameterException.class)
+    public void aNullStringAsUserIDProvokesAnException(){
+        user= new User(null,"UserName","UserSurname","UserPassword");
+    }
+
+    @Test (expected = InvalidParameterException.class)
+    public void anEmptyStringAsUserIDProvokesAnException(){
+        user= new User("","UserName","UserSurname","UserPassword");
+    }
+
+    @Test
+    public void twoUsersAreTheSameIfTheyHaveTheSameUserId(){
+        User secondUser = new User("UserID","secondName","secondSurname","secondPassword");
+        assertTrue(this.user.equals(secondUser));
+    }
+
+    @Test
+    public void twoUsersAreDifferentIfTheyHaveADifferentUserId(){
+        User secondUser = new User("UserID2","UserName","UserSurname","UserPassword");
+        assertFalse(this.user.equals(secondUser));
+    }
+
+    @Test
+    public void aUserIsEqualToItself(){
+        assertTrue(this.user.equals(this.user));
+    }
+
+    @Test
+    public void aUserIsNotEqualToANonUserObject(){
+        assertFalse(this.user.equals(new Object()));
+    }
+
+    @Test
+    public void usersWithTheSameUserIdHaveTheSameHashCode(){
+        User secondUser =  new User("UserID","secondName","secondSurname","secondPassword");
+        assertEquals(this.user.hashCode(),secondUser.hashCode());
+    }
+
+    @Test
+    public void ICanCreateADummyUserWithOnlyTheUserID(){
+        User user = User.createDummy("userId");
+        assertNotNull(user);
     }
 }
