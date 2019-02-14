@@ -18,9 +18,10 @@ public class VideoTest {
     }
 
     @Test
-    public void theVideoHasUrlAndTitle(){
+    public void theVideoHasUrlAndTitleAndUUID(){
         assertEquals("myURL.com", video.getURL());
         assertEquals("my Video", video.getTitle());
+        assertNotNull(video.getUUID());
     }
 
     @Test

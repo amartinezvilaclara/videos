@@ -27,7 +27,7 @@ public class User {
         this.registrationDate = new Date();
     }
 
-    private void setUniqueUserId(String uniqueUserId) {
+    private void setUniqueUserId(String uniqueUserId) throws InvalidParameterException{
         if(isANullOrEmptyString(uniqueUserId)) throw new InvalidParameterException();
         this.uniqueUserId = uniqueUserId;
     }
@@ -40,7 +40,7 @@ public class User {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws InvalidParameterException{
         if(isANullOrEmptyString(name)) throw new InvalidParameterException();
         this.name = name;
     }
@@ -53,7 +53,7 @@ public class User {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public void setSurname(String surname) throws InvalidParameterException{
         if(isANullOrEmptyString(surname)) throw new InvalidParameterException();
         this.surname = surname;
     }
@@ -62,7 +62,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password) throws InvalidParameterException{
         if(isANullOrEmptyString(password)) throw new InvalidParameterException();
         this.password = password;
     }

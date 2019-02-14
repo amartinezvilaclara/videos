@@ -4,10 +4,7 @@ import com.ITAcademy.AnaMartinez.Videos.Domain.User;
 import com.ITAcademy.AnaMartinez.Videos.Domain.Video;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Controller {
 
@@ -19,13 +16,13 @@ public class Controller {
          videos = new ArrayList<>();
     }
 
-    public boolean addUser(String userId, String name, String surname, String password) {
-        return users.add(new User(userId, name, surname, password));
+    public boolean addUser(User user) {
+        return users.add(user);
     }
 
-    public void addVideo(String URL, String title, String owner) {
-        if(users.contains(User.createDummy(owner))) {
-            videos.add(new Video(URL, title, owner));
+    public void addVideo(Video video) throws InvalidParameterException {
+        if(users.contains(User.createDummy(video.getOwner()))) {
+            videos.add(video);
         }
         else throw new InvalidParameterException();
     }
@@ -38,11 +35,32 @@ public class Controller {
         return users.size();
     }
 
-    public List<Video> getAllVideosFromUser(String userID) {
+    public List<Video> getAllVideosFromUser(String userID) throws InvalidParameterException {
+        if(!users.contains(User.createDummy(userID))) throw new InvalidParameterException();
         List<Video> userVideoList = new ArrayList<>();
         for(Video v : videos){
             if(v.getOwner().equals(userID)) userVideoList.add(v);
         }
         return userVideoList;
+    }
+
+    public void addTagToVideo(UUID uuid, String myTag) {
+        for (Video v : videos){
+            if(v.getUUID().equals(uuid)) v.addTag(myTag);
+        }
+    }
+
+    public String[] getListOfTagsFromVideo(UUID uuid) {
+        for (Video v : videos){
+            if(v.getUUID().equals(uuid)) return v.getTags();
+        }
+        return new String[0];
+    }
+
+    public boolean getNumberOfTagsFromVideo(UUID uuid) throws InvalidParameterException{
+        for (Video v : videos){
+            if(v.getUUID().equals(uuid)) return v.isTagListEmpty();
+        }
+        throw new InvalidParameterException();
     }
 }
