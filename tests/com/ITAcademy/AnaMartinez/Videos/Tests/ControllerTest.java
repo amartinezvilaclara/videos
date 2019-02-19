@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 public class ControllerTest {
-    //TODO add tags to videos
+
     private Controller controller;
 
     @Before
@@ -51,15 +51,22 @@ public class ControllerTest {
     @Test
     public void ICanAddAVideoFromAUserThatExists(){
         addUserToController("UserID","UserName","UserSurname","UserPassword");
-        Video video = new Video("myURL.com","my Video", "UserID");
-        controller.addVideo(video);
+        addVideoToController("myURL.com","my Video", "UserID");
         assertEquals(1, controller.getNumberOfVideos());
+    }
+
+    private UUID addVideoToController(String URL, String title, String userId, String... tags) {
+        Video video = new Video(URL,title, userId);
+        for(String s: tags){
+            video.addTag(s);
+        }
+        controller.addVideo(video);
+        return video.getUUID();
     }
 
     @Test (expected = InvalidParameterException.class)
     public void tryingToAddAVideoForAUserThatDoesNotExistThrowsAnException(){
-        Video video = new Video("myURL.com","my Video", "userId");
-        controller.addVideo(video);
+        addVideoToController("myURL.com","my Video", "UserID");
     }
 
     @Test
@@ -90,16 +97,12 @@ public class ControllerTest {
     public void ICanKnowIfAVideoHasTags(){
         //the video has no tags
         addUserToController("UserID","UserName","UserSurname","UserPassword");
-        Video video = new Video("myURL.com","my Video", "UserID");
-        controller.addVideo(video);
-        boolean isTheTagListEmpty = controller.getNumberOfTagsFromVideo(video.getUUID());
+        UUID videoId = addVideoToController("myURL.com","my Video", "UserID");
+        boolean isTheTagListEmpty = controller.getNumberOfTagsFromVideo(videoId);
         assertTrue(isTheTagListEmpty);
         //the video has tags
-        video = new Video("myURL2.com","my Video2", "UserID");
-        video.addTag("Tag1");
-        video.addTag("This is tag 2");
-        controller.addVideo(video);
-        isTheTagListEmpty = controller.getNumberOfTagsFromVideo(video.getUUID());
+        videoId = addVideoToController("myURL2.com","my Video2", "UserID", "Tag1", "This is Tag 2");
+        isTheTagListEmpty = controller.getNumberOfTagsFromVideo(videoId);
         assertFalse(isTheTagListEmpty);
     }
 
@@ -108,14 +111,49 @@ public class ControllerTest {
         controller.getNumberOfTagsFromVideo(UUID.randomUUID());
     }
 
+    @Test
+    public void ICanGetTheTagsFromAVideo(){
+        addUserToController("UserID","UserName","UserSurname","UserPassword");
+        UUID videoId = addVideoToController("myURL.com","my Video", "UserID", "Tag1", "this is tag 2", "taaaag 3");
+        List<String> listOfTags = controller.getListOfTagsFromVideo(videoId);
+        String[] tags= new String[]{"Tag1", "this is tag 2", "taaaag 3"};
+        assertEquals(3,listOfTags.size());
+        assertArrayEquals(tags, listOfTags.toArray(new String[0]));
+        //retrieving the list from a video that has no tags
+        videoId = addVideoToController("myURL2.com","my Video2", "UserID");
+        listOfTags = controller.getListOfTagsFromVideo(videoId);
+        assertEquals(0,listOfTags.size());
+    }
 
-   /* @Test
+    @Test (expected = InvalidParameterException.class)
+    public void tryingToGettheTagsFromAVideoThatDoesNotExistsThrowsAnException(){
+        controller.getListOfTagsFromVideo(UUID.randomUUID());
+    }
+
+    @Test
     public void addATagToAVideo(){
-        User user = new User("UserID","UserName","UserSurname","UserPassword");
-        controller.addUserToController(user);
-        Video video = new Video("myURL.com","my Video", "UserID");
-        controller.addVideo(video);
-        controller.addTagToVideo(video.getUUID(), "myTag");
+        addUserToController("UserID","UserName","UserSurname","UserPassword");
+        UUID videoId = addVideoToController("myURL.com","my Video", "UserID", "Tag1", "this is tag 2", "taaaag 3");
+        controller.addTagToVideo(videoId, "myTag");
+        String[] tags= new String[]{"Tag1", "this is tag 2", "taaaag 3","myTag"};
+        List<String> listOfTags = controller.getListOfTagsFromVideo(videoId);
+        assertEquals(4,listOfTags.size());
+        assertArrayEquals(tags, listOfTags.toArray(new String[0]));
+    }
 
-    }*/
+    @Test (expected = InvalidParameterException.class)
+    public void tryingToAddATagToAVideoThatDoesNotExistsThrowsAnException(){
+        controller.addTagToVideo(UUID.randomUUID(), "myTag");
+    }
+
+    @Test (expected = InvalidParameterException.class)
+    public void tryingToAddAnEmptyTagToAVideoThrowsAnException(){
+        controller.addTagToVideo(UUID.randomUUID(), "");
+    }
+
+    @Test (expected = InvalidParameterException.class)
+    public void tryingToAddANullTagToAVideoThrowsAnException(){
+        controller.addTagToVideo(UUID.randomUUID(), null);
+    }
+
 }

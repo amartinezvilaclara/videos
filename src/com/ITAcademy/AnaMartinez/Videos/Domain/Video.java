@@ -61,10 +61,8 @@ public class Video {
         return (string == null) || (string.equals(""));
     }
 
-    //If there are not tags, a exception is thrown. Is it better solution than returning a Null?
-    public String[] getTags() throws NullPointerException{
-        if (isTagListEmpty()) throw new NullPointerException();
-        return this.tags.toArray(new String[1]);
+    public List<String> getTags(){
+        return this.tags;
     }
 
     public void removeTag(String myTag) throws InvalidParameterException{

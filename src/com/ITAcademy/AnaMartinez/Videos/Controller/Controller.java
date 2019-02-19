@@ -8,6 +8,7 @@ import java.util.*;
 
 public class Controller {
 
+    //TODO remove functions: remove user, remove all users, remove video, remove all videos, remove tag, remove all tags
     private Set<User> users;
     private List<Video> videos;
 
@@ -44,22 +45,26 @@ public class Controller {
         return userVideoList;
     }
 
-    public void addTagToVideo(UUID uuid, String myTag) {
-        for (Video v : videos){
-            if(v.getUUID().equals(uuid)) v.addTag(myTag);
-        }
-    }
-
-    public String[] getListOfTagsFromVideo(UUID uuid) {
-        for (Video v : videos){
-            if(v.getUUID().equals(uuid)) return v.getTags();
-        }
-        return new String[0];
-    }
-
     public boolean getNumberOfTagsFromVideo(UUID uuid) throws InvalidParameterException{
         for (Video v : videos){
             if(v.getUUID().equals(uuid)) return v.isTagListEmpty();
+        }
+        throw new InvalidParameterException();
+    }
+
+    public List<String> getListOfTagsFromVideo(UUID uuid) throws InvalidParameterException {
+        for (Video v : videos){
+            if(v.getUUID().equals(uuid)) return v.getTags();
+        }
+        throw new InvalidParameterException();
+    }
+
+    public void addTagToVideo(UUID uuid, String myTag) throws InvalidParameterException{
+        for (Video v : videos){
+            if(v.getUUID().equals(uuid)){
+                v.addTag(myTag);
+                return;
+            }
         }
         throw new InvalidParameterException();
     }

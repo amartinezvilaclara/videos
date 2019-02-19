@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -40,29 +41,24 @@ public class VideoTest {
     @Test
     public void ICanGetTheListOfTags(){
         video.addTag("myTag");
-        String[] listOfTags = video.getTags();
-        assertEquals("myTag",listOfTags[0]);
+        List<String> listOfTags = video.getTags();
+        assertEquals("myTag",listOfTags.get(0));
     }
 
     @Test
     public void ICanAddTwoTagsToTheList(){
         video.addTag("myTag");
         video.addTag("myTag2");
-        String[] listOfTags = video.getTags();
-        assertEquals(2,listOfTags.length);
-    }
-
-    @Test (expected = NullPointerException.class)
-    public void TryingToGetAnEmptyListOfTagsThrowsAnException(){
-        video.getTags();
+        List<String> listOfTags = video.getTags();
+        assertEquals(2,listOfTags.size());
     }
 
     @Test
     public void theListOfTagsContainsNoRepeatedTags(){
         video.addTag("myTag");
         video.addTag("myTag");
-        String[] listOfTags = video.getTags();
-        assertEquals(1,listOfTags.length);
+        List<String> listOfTags = video.getTags();
+        assertEquals(1,listOfTags.size());
     }
 
     @Test
@@ -78,8 +74,8 @@ public class VideoTest {
     public void ICanRemoveAllTags(){
         video.addTag("myTag");
         video.addTag("myTag2");
-        String[] listOfTags = video.getTags();
-        assertEquals(2,listOfTags.length);
+        List<String> listOfTags = video.getTags();
+        assertEquals(2,listOfTags.size());
         video.removeAllTags();
         assertTrue(video.isTagListEmpty());
     }
